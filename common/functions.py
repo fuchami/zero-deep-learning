@@ -8,13 +8,15 @@ def sigmoid(x):
 def sigmoid_grad(x):
     return (1.0 - sigmoid(x)) * sigmoid(x)
 
-
-def softmax(a):
-    c = np.max(a)
-    exp_a = np.exp(a - c) # オーバーフロー対策
-    sum_exp_a = np.sum(exp_a)
+def softmax(x):
+    if x.ndim == 2:
+        x = x.T
+        x = x - np.max(x, axis=0)
+        y = np.exp(x) / np.sum(np.exp(x), axis=0)
+        return y.T
     
-    return exp_a / sum_exp_a
+    x = x - np.max(x)
+    return  np.exp(x) / np.sum(np.exp(x))
 
 def cross_entropy_error(y, t):
     if y.ndim == 1:
